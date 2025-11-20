@@ -4,7 +4,14 @@ const router = express.Router();
 
 const PriceSnapshot = require("../models/PriceSnapshot");
 
-const COINS = ["bitcoin", "ethereum", "litecoin", "cardano"];
+const COINS = [
+  "bitcoin",
+  "ethereum",
+  "litecoin",
+  "cardano",
+  "dogecoin",
+  "pambi"
+];
 
 router.get("/", async (req, res) => {
   try {
@@ -20,22 +27,21 @@ router.get("/", async (req, res) => {
       console.log("No se pudo guardar snapshot:", e.message);
     }
 
-    return res.json({ success: true, prices });
-
+    res.json({ success: true, prices });
   } catch (err) {
     const status = err.response?.status;
 
     if (status === 429) {
       return res.status(503).json({
         success: false,
-        message: "La API de CoinGecko está limitando las peticiones. Intenta en unos segundos.",
+        message: "La API de CoinGecko está limitando las peticiones. Intenta de nuevo más tarde.",
       });
     }
 
     return res.status(500).json({
       success: false,
       message: "Error obteniendo precios.",
-      details: err.message,
+      details: err.message
     });
   }
 });
