@@ -20,10 +20,23 @@ router.get("/", async (req, res) => {
       console.log("No se pudo guardar snapshot:", e.message);
     }
 
-    res.json({ success: true, prices });
+    return res.json({ success: true, prices });
+
   } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ success: false, message: "Error obteniendo precios" });
+    const status = err.response?.status;
+
+    if (status === 429) {
+      return res.status(503).json({
+        success: false,
+        message: "La API de CoinGecko está limitando las peticiones. Intenta en unos segundos.",
+      });
+    }
+
+    return res.status(500).json({
+      success: false,
+      message: "Error obteniendo precios.",
+      details: err.message,
+    });
   }
 });
 
