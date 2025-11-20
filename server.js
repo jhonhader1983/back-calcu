@@ -22,7 +22,8 @@ mongoose
   .then(() => {
     console.log("MongoDB conectado correctamente");
     app.listen(PORT, () =>
-      console.log(`Backend corriendo en http://localhost:${PORT}`)
+      console.log(`Backend corriendo en el puerto ${PORT}`)
+
     );
   })
   .catch((err) => console.error("Error conectando a Mongo:", err));
